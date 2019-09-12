@@ -9,10 +9,10 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.qinggan.myapplication.nucleusMvp.*
 
-open class NucleusConstraintLayout<P : Presenter<Any>>
+open class NucleusConstraintLayout<P : Presenter<View>, View>
 constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     ConstraintLayout(context, attrs, defStyleAttr),
-    ViewWithPresenter<P> {
+    ViewWithPresenter<P, View> {
 
     companion object {
         private val PARENT_STATE_KEY = "parent_state"
@@ -21,7 +21,7 @@ constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 
 
     private var presenterDelegate =
-        PresenterLifecycleDelegate<P>(
+        PresenterLifecycleDelegate<P, View>(
             ReflectionPresenterFactory.fromViewClass(
                 this.javaClass
             )
@@ -31,12 +31,12 @@ constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 
     constructor(context: Context) : this(context, null, -1)
 
-    override fun getPresenterFactory(): PresenterFactory<P>? {
+    override fun getPresenterFactory(): PresenterFactory<P, View>? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         return presenterDelegate.getPresenterFactory()
     }
 
-    override fun setPresenterFactory(presenterFactory: PresenterFactory<P>?) {
+    override fun setPresenterFactory(presenterFactory: PresenterFactory<P, View>?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         presenterDelegate.setPresenterFactory(presenterFactory)
     }

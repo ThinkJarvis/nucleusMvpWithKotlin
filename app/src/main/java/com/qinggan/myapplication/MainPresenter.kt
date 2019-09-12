@@ -15,6 +15,7 @@ open class MainPresenter : Presenter<MainActivity>() {
     override fun takeView(view: MainActivity) {
         super.takeView(view)
         Log.e("wjq", "MainPresenter takeView")
+        view.setTextValue()
     }
 
 

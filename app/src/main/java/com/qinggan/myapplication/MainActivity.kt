@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 @RequiresPresenter(MainPresenter::class)
-open class MainActivity : NucleusActivity<MainPresenter>() {
+open class MainActivity : NucleusActivity<MainPresenter, MainActivity>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +21,6 @@ open class MainActivity : NucleusActivity<MainPresenter>() {
 
 
     open fun setTextValue() {
-        message.setText("Hello Kotlin")
+        message.text = "Hello Kotlin"
     }
 }

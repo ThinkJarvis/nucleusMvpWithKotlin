@@ -3,8 +3,8 @@ package com.qinggan.myapplication.nucleusMvp
 import kotlin.reflect.KClass
 
 
-open class ReflectionPresenterFactory<P : Presenter<*>> constructor(presenterClass: KClass<P>) :
-    PresenterFactory<P> {
+open class ReflectionPresenterFactory<P : Presenter<View>, View> constructor(presenterClass: KClass<P>) :
+    PresenterFactory<P, View> {
 
     private var presenterClass: KClass<P>? = presenterClass
 
@@ -18,7 +18,7 @@ open class ReflectionPresenterFactory<P : Presenter<*>> constructor(presenterCla
          * @return a {@link ReflectionPresenterFactory} instance that is supposed to create a presenter from {@link RequiresPresenter} annotation.
          */
 
-        fun <P : Presenter<*>> fromViewClass(viewClass: Class<*>): ReflectionPresenterFactory<P>? {
+        fun <P : Presenter<View>, View> fromViewClass(viewClass: Class<*>): ReflectionPresenterFactory<P, View>? {
             val annotation = viewClass.getAnnotation(RequiresPresenter::class.java)
             val presenterClass = annotation?.value as KClass<P>
             return if (presenterClass == null) null else ReflectionPresenterFactory(presenterClass)

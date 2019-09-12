@@ -1,6 +1,6 @@
 package com.qinggan.myapplication.nucleusMvp
 
 
-interface PresenterFactory<P : Presenter<*>> {
+interface PresenterFactory<P : Presenter<View>, View> {
     open fun createPresenter(): P?
 }

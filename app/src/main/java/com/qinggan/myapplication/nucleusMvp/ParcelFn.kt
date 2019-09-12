@@ -8,7 +8,7 @@ open class ParcelFn {
 
         fun <T> unmarshall(array: ByteArray?): T {
             val parcel = Parcel.obtain()
-            parcel.unmarshall(array, 0, array?.size?:0)
+            parcel.unmarshall(array, 0, array?.size ?: 0)
             parcel.setDataPosition(0)
             val value = parcel.readValue(CLASS_LOADER)
             parcel.recycle()

@@ -3,19 +3,19 @@ package com.qinggan.myapplication.nucleusMvp
 /**
  * Returns a current presenter factory.
  */
-interface ViewWithPresenter<P : Presenter<*>> {
+interface ViewWithPresenter<P : Presenter<View>, View> {
 
     /**
      * Returns a current presenter factory.
      */
-    fun getPresenterFactory(): PresenterFactory<P>?
+    fun getPresenterFactory(): PresenterFactory<P, View>?
 
     /**
      * Sets a presenter factory.
      * Call this method before onCreate/onFinishInflate to override default {@link ReflectionPresenterFactory} presenter factory.
      * Use this method for presenter dependency injection.
      */
-    fun setPresenterFactory(presenterFactory: PresenterFactory<P>?)
+    fun setPresenterFactory(presenterFactory: PresenterFactory<P, View>?)
 
     /**
      * Returns a current attached presenter.

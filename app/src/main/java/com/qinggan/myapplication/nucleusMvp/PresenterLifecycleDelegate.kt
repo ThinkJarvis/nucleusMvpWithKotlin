@@ -2,18 +2,19 @@ package com.qinggan.myapplication.nucleusMvp
 
 import android.os.Bundle
 
+
 /**
  * This class adopts a View lifecycle to the Presenter`s lifecycle.
  *
  * @param <P> a type of the presenter.
  */
-open class PresenterLifecycleDelegate<P : Presenter<*>> constructor(presenterFactory: PresenterFactory<P>?) {
+open class PresenterLifecycleDelegate<P : Presenter<View>, View> constructor(presenterFactory: PresenterFactory<P, View>?) {
     companion object {
         const val PRESENTER_KEY: String = "presenter"
         const val PRESENTER_ID_KEY: String = "presenter_id"
     }
 
-    private var presenterFactory: PresenterFactory<P>? = presenterFactory
+    private var presenterFactory: PresenterFactory<P, View>? = presenterFactory
     private var presenter: P? = null
     private var bundle: Bundle? = null
     private var presenterHasView: Boolean = false
@@ -21,14 +22,14 @@ open class PresenterLifecycleDelegate<P : Presenter<*>> constructor(presenterFac
     /**
      * {@link ViewWithPresenter#getPresenterFactory()}
      */
-    open fun getPresenterFactory(): PresenterFactory<P>? {
+    open fun getPresenterFactory(): PresenterFactory<P, View>? {
         return presenterFactory
     }
 
     /**
      * {@link ViewWithPresenter#setPresenterFactory(PresenterFactory)}
      */
-    open fun setPresenterFactory(presenterFactory: PresenterFactory<P>?) {
+    open fun setPresenterFactory(presenterFactory: PresenterFactory<P, View>?) {
         if (presenter != null) throw  IllegalArgumentException(
             "setPresenterFactory() should be called before onResume()"
         )
@@ -39,13 +40,14 @@ open class PresenterLifecycleDelegate<P : Presenter<*>> constructor(presenterFac
      * {@link ViewWithPresenter#getPresenter()}
      */
     open fun getPresenter(): P? {
-        if (presenter == null)
+        if (presenter == null) {
             presenter =
                 PresenterStorage.INSTANCE.getPresenter(bundle?.getString(PRESENTER_ID_KEY))
 
-        presenter = presenterFactory?.createPresenter()
-        PresenterStorage.INSTANCE.add(presenter)
-        presenter?.create(bundle?.getBundle(PRESENTER_KEY) ?: null)
+            presenter = presenterFactory?.createPresenter()
+            PresenterStorage.INSTANCE.add(presenter)
+            presenter?.create(bundle?.getBundle(PRESENTER_KEY) ?: null)
+        }
 
         bundle = null
         return presenter
@@ -82,7 +84,7 @@ open class PresenterLifecycleDelegate<P : Presenter<*>> constructor(presenterFac
     open fun onResume(view: Any) {
         getPresenter()
         if (!presenterHasView) {
-            presenter?.takeView(view as )
+            presenter?.takeView(view as View)
             presenterHasView = true
         }
     }
@@ -93,8 +95,8 @@ open class PresenterLifecycleDelegate<P : Presenter<*>> constructor(presenterFac
      * {@link android.view.View#onDetachedFromWindow()}
      */
     open fun onDropView() {
-        if (presenter != null && presenterHasView) {
-            presenter!!.dropView()
+        if (presenterHasView) {
+            presenter?.dropView()
             presenterHasView = false
         }
     }
@@ -105,8 +107,8 @@ open class PresenterLifecycleDelegate<P : Presenter<*>> constructor(presenterFac
      * {@link android.view.View#onDetachedFromWindow()}
      */
     open fun onDestroy(isFinal: Boolean) {
-        if (presenter != null && isFinal) {
-            presenter!!.destroy()
+        if (isFinal) {
+            presenter?.destroy()
             presenter = null
         }
     }
