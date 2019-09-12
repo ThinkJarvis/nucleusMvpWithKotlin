@@ -37,7 +37,7 @@ enum class PresenterStorage {
      */
     fun <P> getPresenter(id: String?): P? {
         //noinspection unchecked
-        return idToPresenter.get(id) as P?
+        return idToPresenter[id] as P?
     }
 
     /**
@@ -47,7 +47,7 @@ enum class PresenterStorage {
      * @return if of the presenter.
      */
     fun getId(presenter: Presenter<*>?): String? {
-        return presenterToId.get(presenter)
+        return presenterToId[presenter]
     }
 
     /**
